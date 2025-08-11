@@ -56,3 +56,4 @@ export default User;
 // 7. The server sends this token back to your app along with some basic info about your account.
 // 8. The app stores this token on your device using something called AsyncStorage (like a small file cabinet for app data).
 // 9. You’re now logged in and can use the app 🎉
+// start--->fill form--->validate input--->--send to server--> ||with in the server|| check database-->create aaccount-->generate JWT -->send token ||store token--->login
