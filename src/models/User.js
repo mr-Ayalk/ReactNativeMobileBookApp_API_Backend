@@ -15,10 +15,9 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      require: true,
+      required: true,
       minlength: 6,
     },
-
     profileImage: {
       type: String,
       default: "",
@@ -26,23 +25,25 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// hash password before saving user to db
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+
+  next();
+});
+
+// compare password func
+userSchema.methods.comparePassword = async function (userPassword) {
+  return await bcrypt.compare(userPassword, this.password);
+};
+
 const User = mongoose.model("User", userSchema);
+
 export default User;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // **SIGNUP WORKFLOW**
 
@@ -55,7 +56,3 @@ export default User;
 // 7. The server sends this token back to your app along with some basic info about your account.
 // 8. The app stores this token on your device using something called AsyncStorage (like a small file cabinet for app data).
 // 9. You’re now logged in and can use the app 🎉
-
-
-
-
